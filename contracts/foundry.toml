@@ -1,0 +1,19 @@
+# OpenTape executor — self-contained Foundry project (NOT part of the pnpm workspace).
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+script = "script"
+solc = "0.8.26"
+# Paris keeps the bytecode free of PUSH0 / transient storage so it deploys on any
+# BSC mainnet node regardless of the client's active hardfork.
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 800
+bytecode_hash = "none"
+remappings = ["forge-std/=lib/forge-std/src/"]
+
+# Fork tests read this if it is set; they skip cleanly when it is empty.
+[rpc_endpoints]
+bsc = "${BSC_RPC_URL}"

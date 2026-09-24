@@ -1,0 +1,7 @@
+# Foundry build output and dependencies. Vendored deps and build caches never ship.
+out/
+cache/
+lib/
+broadcast/
+.env
+*.log

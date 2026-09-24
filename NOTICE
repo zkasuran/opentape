@@ -5,22 +5,24 @@ OpenTape is licensed under Source-Available No-Derivatives 1.0 (SPDX `LicenseRef
 Third-party components, used under their own licences. Each remains under its own terms; see the
 respective package for the full text.
 
-- viem — MIT
-- zod — MIT
-- @pythnetwork/pyth-evm-js — Apache-2.0
-- fastify — MIT
-- @fastify/cors — MIT
-- dotenv — BSD-2-Clause
-- next — MIT
-- react, react-dom — MIT
-- tailwindcss — MIT
-- postcss — MIT
-- autoprefixer — MIT
-- recharts — MIT
-- clsx — MIT
-- tailwind-merge — MIT
-- lucide-react — ISC
-- typescript — Apache-2.0 (dev)
-- vitest — MIT (dev)
-- tsx — MIT (dev)
-- @biomejs/biome — MIT or Apache-2.0 (dev)
+- viem: MIT
+- zod: MIT
+- fastify: MIT
+- @fastify/cors: MIT
+- dotenv: BSD-2-Clause
+- next: MIT
+- react, react-dom: MIT
+- recharts: MIT
+- clsx: MIT
+- tailwind-merge: MIT
+- lucide-react: ISC
+- postcss: MIT
+- autoprefixer: MIT
+- typescript: Apache-2.0 (dev)
+- vitest: MIT (dev)
+- tsx: MIT (dev)
+- @biomejs/biome: MIT or Apache-2.0 (dev)
+
+Underlying reference prices are read on-chain from Chainlink Data Feeds on BNB Smart Chain, which needs
+no npm dependency. Venue data is read from PancakeSwap on-chain, the Binance public market-data API, and
+Ondo. See DATA-SOURCES.md for each source and its terms.

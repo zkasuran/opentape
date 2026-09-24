@@ -3,7 +3,7 @@ export * from "./types";
 export { registerAdapter, getAdapters, clearAdapters } from "./registry";
 export { listUnderlyings, UNDERLYINGS } from "./catalog";
 export { getConsolidatedTape, getBestExecution, getArbSpread } from "./core/engine";
-export { getFairValue } from "./fairvalue/pyth";
+export { getFairValue } from "./fairvalue/chainlink";
 export { pancakeswapAdapter } from "./adapters/pancakeswap";
 export { binanceAdapter } from "./adapters/binance";
 export { ondoAdapter } from "./adapters/ondo";
