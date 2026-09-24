@@ -5,6 +5,7 @@ import { demoTape } from "../../../lib/demo";
 import type { TapeResponse, TapeRow } from "../../../lib/types";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "bom1";
 
 // Market-wide consolidated tape: one premium row per tracked underlying, used by the
 // symbol strip and the premium radar. Live via the SDK engine, else DEMO fallback.

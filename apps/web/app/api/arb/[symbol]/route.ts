@@ -5,6 +5,7 @@ import { demoArbSpread } from "../../../../lib/demo";
 import type { ArbResponse } from "../../../../lib/types";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "bom1";
 
 // Cross-issuer arb SIGNAL for a symbol: buy cheapest, sell/redeem dearest, net of costs.
 // Executability is reported honestly (redemption is gated) and it falls back to DEMO.
