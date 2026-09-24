@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
 export * from "./types";
 export { registerAdapter, getAdapters, clearAdapters } from "./registry";
+export { registerDefaultAdapters } from "./defaults";
 export { listUnderlyings, UNDERLYINGS } from "./catalog";
 export { getConsolidatedTape, getBestExecution, getArbSpread } from "./core/engine";
 export { getFairValue } from "./fairvalue/chainlink";

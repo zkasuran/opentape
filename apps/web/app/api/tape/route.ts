@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
 import { NextResponse } from "next/server";
-import { getConsolidatedTape, listUnderlyings } from "@opentape/sdk";
+import { getConsolidatedTape, listUnderlyings, registerDefaultAdapters } from "@opentape/sdk";
 import { demoTape } from "../../../lib/demo";
 import type { TapeResponse, TapeRow } from "../../../lib/types";
 
@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 // symbol strip and the premium radar. Live via the SDK engine, else DEMO fallback.
 export async function GET() {
   try {
+    registerDefaultAdapters();
     const symbols = listUnderlyings();
     const rows = await Promise.all(symbols.map((s) => getConsolidatedTape(s)));
     const ok = rows.filter((r): r is TapeRow => Boolean(r?.bestOffer));

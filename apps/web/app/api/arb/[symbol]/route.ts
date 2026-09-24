@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
 import { NextResponse } from "next/server";
-import { getArbSpread } from "@opentape/sdk";
+import { getArbSpread, registerDefaultAdapters } from "@opentape/sdk";
 import { demoArbSpread } from "../../../../lib/demo";
 import type { ArbResponse } from "../../../../lib/types";
 
@@ -13,6 +13,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ symbol: string
   const sym = symbol.toUpperCase();
 
   try {
+    registerDefaultAdapters();
     const result = await getArbSpread(sym);
     if (!result?.buy || !result.sell) throw new Error("no live arb");
     const body: ArbResponse = { mode: "live", result, fetchedAt: Date.now() };
