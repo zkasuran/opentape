@@ -47,12 +47,16 @@ export function ArbCard({ arb }: { arb: ArbSpread }) {
         </div>
       </div>
 
-      {arb.notes.map((n) => (
-        <div className="note" key={n}>
-          <Info size={15} />
-          <span>{n}</span>
-        </div>
-      ))}
+      {arb.notes.length > 0 ? (
+        <ul className="arb-notes">
+          {arb.notes.map((n) => (
+            <li key={n}>
+              <Info size={13} />
+              <span>{n}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
