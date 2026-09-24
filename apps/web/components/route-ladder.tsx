@@ -5,10 +5,12 @@ import { CircleCheck, Lock } from "lucide-react";
 import type { BestExecution } from "../lib/types";
 import { bps, price } from "../lib/format";
 import { landedPerShare, landedPremiumBps } from "../lib/quote";
-import { ISSUER_COLOR } from "../lib/palette";
+import { issuerColor } from "../lib/palette";
 import { issuerLabel, venueKindLabel, venueLabel } from "../lib/venue";
+import { useTheme } from "./theme";
 
 export function RouteLadder({ result }: { result: BestExecution }) {
+  const { theme } = useTheme();
   const fair = result.fairValue.usd;
   const bestBps = landedPremiumBps(result.best, fair);
   const deltas = result.ranked.map((q) => landedPremiumBps(q, fair) - bestBps);
@@ -34,7 +36,7 @@ export function RouteLadder({ result }: { result: BestExecution }) {
                 className="route-bar-fill"
                 style={{
                   width: `${width}%`,
-                  background: isBest ? "var(--good)" : ISSUER_COLOR[q.issuer] ?? "var(--series-1)",
+                  background: isBest ? "var(--good)" : issuerColor(q.issuer, theme),
                   opacity: isBest ? 1 : 0.72,
                 }}
               />

@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
-"use client";
-
+import Link from "next/link";
+import { NavMenu } from "./nav-menu";
+import { ThemeToggle } from "./theme";
 import { WalletButton } from "./wallet-button";
 
 export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container site-header-inner">
-        <a className="brand" href="#top" aria-label="OpenTape home">
+        <Link className="brand" href="/" aria-label="OpenTape home">
           <span className="brand-mark" aria-hidden="true">
             <i />
             <i />
@@ -15,12 +16,16 @@ export function SiteHeader() {
             <i />
           </span>
           OpenTape
-        </a>
+        </Link>
+
+        <NavMenu />
+
         <div className="header-actions">
-          <span className="pill pill-bnb">
+          <span className="pill pill-bnb hide-sm" title="Runs on BNB Smart Chain">
             <span className="dot" />
             BNB Chain
           </span>
+          <ThemeToggle />
           <WalletButton />
         </div>
       </div>

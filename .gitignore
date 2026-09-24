@@ -8,8 +8,10 @@ coverage
 .env
 .env.*
 /submit/
+CONTENT-*.html
 DEMO-*.mp4
 upload-*/
+CODEX-VIDEO-BRIEF.md
 artifacts/
 .DS_Store
 *.log

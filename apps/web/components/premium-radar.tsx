@@ -15,9 +15,10 @@ import {
 } from "recharts";
 import type { BestExecution } from "../lib/types";
 import { bps, price } from "../lib/format";
-import { PALETTE, premiumColor } from "../lib/palette";
+import { CHART_TOKENS, DIVERGE, divergeFill } from "../lib/palette";
 import { quotePremiumBps } from "../lib/quote";
 import { issuerLabel, venueLabel } from "../lib/venue";
+import { useTheme } from "./theme";
 
 interface RadarDatum {
   name: string;
@@ -30,6 +31,9 @@ interface RadarDatum {
 export function PremiumRadar({ result }: { result: BestExecution }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  const { theme } = useTheme();
+  const tok = CHART_TOKENS[theme];
+  const poles = DIVERGE[theme];
 
   const fair = result.fairValue.usd;
   const data: RadarDatum[] = result.ranked
@@ -56,31 +60,31 @@ export function PremiumRadar({ result }: { result: BestExecution }) {
               margin={{ top: 4, right: 20, bottom: 4, left: 8 }}
               barCategoryGap={10}
             >
-              <CartesianGrid horizontal={false} stroke={PALETTE.grid} strokeDasharray="0" />
+              <CartesianGrid horizontal={false} stroke={tok.grid} strokeDasharray="0" />
               <XAxis
                 type="number"
                 domain={[-bound, bound]}
-                tick={{ fill: PALETTE.textMuted, fontSize: 11 }}
+                tick={{ fill: tok.textMuted, fontSize: 11 }}
                 tickLine={false}
-                axisLine={{ stroke: PALETTE.axis }}
+                axisLine={{ stroke: tok.axis }}
                 tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}`}
               />
               <YAxis
                 type="category"
                 dataKey="name"
                 width={116}
-                tick={{ fill: PALETTE.textSecondary, fontSize: 12 }}
+                tick={{ fill: tok.textSecondary, fontSize: 12 }}
                 tickLine={false}
                 axisLine={false}
               />
-              <ReferenceLine x={0} stroke={PALETTE.axis} strokeWidth={1.5} />
+              <ReferenceLine x={0} stroke={tok.axis} strokeWidth={1.5} />
               <Tooltip
-                cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                cursor={{ fill: "rgba(128,128,128,0.10)" }}
                 content={renderTooltip as unknown as ComponentProps<typeof Tooltip>["content"]}
               />
               <Bar dataKey="premiumBps" radius={[3, 3, 3, 3]} isAnimationActive={false}>
                 {data.map((d) => (
-                  <Cell key={d.name} fill={premiumColor(d.premiumBps)} />
+                  <Cell key={d.name} fill={divergeFill(d.premiumBps, theme)} />
                 ))}
               </Bar>
             </BarChart>
@@ -91,11 +95,11 @@ export function PremiumRadar({ result }: { result: BestExecution }) {
       </div>
       <div className="legend-row">
         <span className="legend-item">
-          <span className="legend-swatch" style={{ background: PALETTE.divergeNeg }} />
+          <span className="legend-swatch" style={{ background: poles.neg }} />
           discount, trades below true
         </span>
         <span className="legend-item">
-          <span className="legend-swatch" style={{ background: PALETTE.divergePos }} />
+          <span className="legend-swatch" style={{ background: poles.pos }} />
           premium, trades above true
         </span>
         <span className="legend-item" style={{ color: "var(--text-muted)" }}>
@@ -123,7 +127,7 @@ function renderTooltip(props: { active?: boolean; payload?: ReadonlyArray<{ payl
       </div>
       <div className="tt-row">
         <span>vs true</span>
-        <b style={{ color: premiumColor(d.premiumBps) }}>{bps(d.premiumBps, { sign: true })}</b>
+        <b className={d.premiumBps >= 0 ? "num-prem" : "num-disc"}>{bps(d.premiumBps, { sign: true })}</b>
       </div>
     </div>
   );

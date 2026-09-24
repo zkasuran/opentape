@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { WalletProvider } from "../components/wallet";
+import { ThemeProvider } from "../components/theme";
 
 export const metadata: Metadata = {
   title: "OpenTape · best execution for tokenized stocks on BNB",
@@ -21,16 +22,30 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d0d0d",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
 
+// Set the theme before first paint so there is no flash of the wrong palette. Runs
+// inline in <head> ahead of the stylesheet: an explicit ?theme= wins and is saved,
+// else the saved choice, else the OS preference. It stamps data-theme on <html>
+// which every color token keys off.
+const NO_FOUC = `(function(){try{var p=new URLSearchParams(location.search).get('theme');if(p!=='light'&&p!=='dark')p=null;var t=p||localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(p)localStorage.setItem('theme',p);document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: NO_FOUC }} />
+      </head>
       <body>
-        <WalletProvider>{children}</WalletProvider>
+        <ThemeProvider>
+          <WalletProvider>{children}</WalletProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

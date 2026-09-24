@@ -2,7 +2,6 @@
 "use client";
 
 import { bps } from "../lib/format";
-import { premiumColor } from "../lib/palette";
 import type { CanonicalSymbol } from "../lib/types";
 
 const SIZE_PRESETS = [1000, 10000, 50000, 100000];
@@ -41,8 +40,11 @@ export function TradePanel({
               >
                 <span className="sym">{s}</span>
                 <span
-                  className="sym-prem"
-                  style={{ color: prem === undefined ? "var(--text-muted)" : premiumColor(prem) }}
+                  className={
+                    prem === undefined
+                      ? "sym-prem sym-prem-none"
+                      : `sym-prem ${prem >= 0 ? "num-prem" : "num-disc"}`
+                  }
                 >
                   {prem === undefined ? "·" : bps(prem, { sign: true })}
                 </span>

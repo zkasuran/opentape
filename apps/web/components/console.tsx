@@ -2,12 +2,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Radar, Search } from "lucide-react";
+import { LineChart, Radar, Search } from "lucide-react";
 import type {
   ArbResponse,
   BestExecResponse,
   CanonicalSymbol,
+  DataMode,
   TapeResponse,
+  TapeRow,
 } from "../lib/types";
 import { clampSizeUsd } from "../lib/quote";
 import {
@@ -23,6 +25,7 @@ import { KpiRow } from "./kpi-row";
 import { RouteLadder } from "./route-ladder";
 import { PremiumRadar } from "./premium-radar";
 import { ArbCard } from "./arb-card";
+import { ConsolidatedTape } from "./consolidated-tape";
 
 const INITIAL_SYMBOL: CanonicalSymbol = "AAPL";
 const INITIAL_SIZE = 10_000;
@@ -53,6 +56,8 @@ export function Console() {
   const [premiumBySymbol, setPremiumBySymbol] = useState<Record<string, number>>(() =>
     tapePremiums(demoTape()),
   );
+  const [tapeRows, setTapeRows] = useState<TapeRow[]>(() => demoTape());
+  const [tapeMode, setTapeMode] = useState<DataMode>("demo");
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const reqId = useRef(0);
@@ -72,7 +77,11 @@ export function Console() {
           fetch("/api/tape").then((r) => r.json() as Promise<TapeResponse>),
         ]);
         if (uRes?.symbols?.length) setSymbols(uRes.symbols);
-        if (tRes?.rows?.length) setPremiumBySymbol(tapePremiums(tRes.rows));
+        if (tRes?.rows?.length) {
+          setPremiumBySymbol(tapePremiums(tRes.rows));
+          setTapeRows(tRes.rows);
+          setTapeMode(tRes.mode);
+        }
       } catch {
         /* keep the demo defaults already in state */
       }
@@ -159,6 +168,36 @@ export function Console() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section section-alt" id="tape">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <span className="eyebrow">
+                <LineChart size={13} style={{ verticalAlign: "-2px", marginRight: 6 }} />
+                Consolidated tape
+              </span>
+              <h2 className="section-title" style={{ marginTop: 8 }}>
+                One neutral tape across every issuer.
+              </h2>
+              <p className="section-sub">
+                The best offer for each tracked underlying, priced against its Chainlink reference.
+                Pick any name to route it through the engine above.
+              </p>
+            </div>
+            {mounted ? (
+              <span className="fetch-meta">
+                <span className={`pill ${tapeMode === "live" ? "pill-live" : "pill-demo"}`}>
+                  <span className="dot" />
+                  {tapeMode === "live" ? "Live data" : "Demo data"}
+                </span>
+                {tapeRows.length} underlyings
+              </span>
+            ) : null}
+          </div>
+          <ConsolidatedTape rows={tapeRows} activeSymbol={activeSymbol} onSelect={setActiveSymbol} />
         </div>
       </section>
 

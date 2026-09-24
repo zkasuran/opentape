@@ -100,7 +100,7 @@ export function BestExecCard({
             {issuerLabel(best)} · {venueLabel(best)}
           </div>
           <div className="winner-sub">
-            {venueKindLabel(best.venueKind)} · {best.priceImpactBps} bps impact on{" "}
+            {venueKindLabel(best.venueKind)} · {Math.round(best.priceImpactBps)} bps impact on{" "}
             ${sizeUsd.toLocaleString("en-US")}
           </div>
           <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
@@ -119,7 +119,7 @@ export function BestExecCard({
         <div className="price-tag">
           <div className="px">${price(landed)}</div>
           <div className="px-sub">
-            <span style={{ color: premiumBps <= 0 ? "var(--good)" : "var(--diverge-pos)" }}>
+            <span className={premiumBps <= 0 ? "val-good" : "val-bad"}>
               {bps(premiumBps, { sign: true })}
             </span>{" "}
             vs true ${price(fair)}
