@@ -60,7 +60,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
-        <section className="section" id="sdk" style={{ paddingTop: 12 }}>
+        <section className="section" id="sdk">
           <div className="container">
             <div className="section-head">
               <div>

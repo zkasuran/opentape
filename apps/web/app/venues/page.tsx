@@ -78,7 +78,7 @@ export default function VenuesPage() {
           </div>
         </section>
 
-        <section className="section" style={{ paddingTop: 12 }}>
+        <section className="section">
           <div className="container">
             <div className="feature-grid">
               {VENUES.map((v) => {

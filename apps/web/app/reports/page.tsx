@@ -56,7 +56,7 @@ export default function ReportsPage() {
           </div>
         </section>
 
-        <section className="section" id="validation" style={{ paddingTop: 12 }}>
+        <section className="section" id="validation">
           <div className="container">
             <div className="section-head">
               <div>

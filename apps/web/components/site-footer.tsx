@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
-import Link from "next/link";
 
 const SOURCES = ["Chainlink reference", "PancakeSwap pools", "Binance public book", "Ondo NAV"];
 
@@ -44,25 +43,25 @@ export function SiteFooter() {
           <div className="footer-col">
             <h4>Product</h4>
             {PRODUCT_LINKS.map((l) => (
-              <Link key={l.href} href={l.href}>
+              <a key={l.href} href={l.href}>
                 {l.label}
-              </Link>
+              </a>
             ))}
           </div>
           <div className="footer-col">
             <h4>Explore</h4>
             {EXPLORE_LINKS.map((l) => (
-              <Link key={l.href} href={l.href}>
+              <a key={l.href} href={l.href}>
                 {l.label}
-              </Link>
+              </a>
             ))}
           </div>
           <div className="footer-col">
             <h4>Trust</h4>
             {TRUST_LINKS.map((l) => (
-              <Link key={l.href} href={l.href}>
+              <a key={l.href} href={l.href}>
                 {l.label}
-              </Link>
+              </a>
             ))}
           </div>
         </div>

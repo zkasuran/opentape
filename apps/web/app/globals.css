@@ -13,6 +13,9 @@
   --radius-xs: 6px;
   --font: system-ui, -apple-system, "Segoe UI", sans-serif;
   --maxw: 1200px;
+  --header-h: 64px;
+  --section-pad: 72px;
+  --section-pad-sm: 48px;
   --dur: 180ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -81,7 +84,7 @@
   --kyc-edge: rgba(236, 131, 90, 0.40);
   --kyc-ink: #f0b47f;
 
-  --header-bg: rgba(13, 13, 13, 0.72);
+  --header-bg: #121211;
   --menu-bg: #161615;
   --glow-1: rgba(57, 135, 229, 0.16);
   --glow-2: rgba(25, 158, 112, 0.12);
@@ -146,7 +149,7 @@
   --kyc-edge: rgba(201, 91, 47, 0.45);
   --kyc-ink: #9c4420;
 
-  --header-bg: rgba(244, 244, 242, 0.82);
+  --header-bg: rgba(246, 246, 244, 0.97);
   --menu-bg: #ffffff;
   --glow-1: rgba(42, 120, 214, 0.10);
   --glow-2: rgba(27, 175, 122, 0.09);
@@ -160,7 +163,7 @@
 /* base -------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { padding: 0; margin: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
 body {
   background:
@@ -188,7 +191,9 @@ button { font-family: inherit; }
 }
 
 /* an anchored section clears the sticky header when jumped to */
-[id] { scroll-margin-top: 84px; }
+/* anchored sections land below the sticky header: scroll-padding-top on the scroll
+   root reserves the header band, scroll-margin-top adds the small gap on top of it */
+[id] { scroll-margin-top: 24px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -201,7 +206,7 @@ button { font-family: inherit; }
 
 /* layout ------------------------------------------------------------------ */
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-.section { padding: 64px 0; }
+.section { padding: var(--section-pad) 0; }
 .section-alt { background: color-mix(in srgb, var(--surface-1) 40%, transparent); border-block: 1px solid var(--border); }
 
 .section-head {
@@ -346,8 +351,8 @@ button { font-family: inherit; }
 .val-neutral { color: var(--text-primary); }
 
 /* hero -------------------------------------------------------------------- */
-.hero { padding: 72px 0 44px; }
-.hero-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 48px; align-items: center; }
+.hero { padding: 72px 0 56px; }
+.hero-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 48px; align-items: start; }
 .hero h1 {
   font-size: clamp(34px, 5vw, 54px); line-height: 1.04; letter-spacing: -0.025em;
   font-weight: 720; margin: 18px 0;
@@ -546,7 +551,7 @@ button { font-family: inherit; }
 .issuer-chip .swatch { width: 9px; height: 9px; border-radius: 999px; }
 
 /* content pages (venues / developers / reports) -------------------------- */
-.page-hero { padding: 56px 0 24px; }
+.page-hero { padding: 64px 0 8px; }
 .page-hero h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-spacing: -0.025em; font-weight: 720; margin: 14px 0 14px; max-width: 20ch; }
 .page-hero .lede { color: var(--text-secondary); font-size: 17px; max-width: 60ch; }
 .page-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
@@ -650,11 +655,11 @@ button { font-family: inherit; }
   .hide-sm { display: none; }
   .cat-nav .nav-hamburger { display: inline-flex; }
   .cat-list {
-    display: none; position: absolute; top: 64px; left: 0; right: 0;
+    display: none; position: absolute; top: var(--header-h); left: 0; right: 0;
     flex-direction: column; align-items: stretch; gap: 3px;
     background: var(--menu-bg); border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-md); padding: 12px 20px 20px; z-index: 60;
-    max-height: calc(100vh - 64px); overflow-y: auto;
+    max-height: calc(100vh - var(--header-h)); overflow-y: auto;
   }
   .cat-list.open { display: flex; }
   .cat { position: static; }
@@ -668,7 +673,7 @@ button { font-family: inherit; }
 
 @media (max-width: 620px) {
   .container { padding: 0 16px; }
-  .section { padding: 44px 0; }
+  .section { padding: var(--section-pad-sm) 0; }
   .steps { grid-template-columns: 1fr; }
   .tape-grid { grid-template-columns: 1fr; }
   .kpi-row { grid-template-columns: 1fr 1fr; }

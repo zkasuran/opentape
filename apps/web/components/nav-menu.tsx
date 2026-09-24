@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -119,6 +119,26 @@ export function NavMenu() {
     setMobileOpen(false);
   }, []);
 
+  // Next's client Link updates the hash but does not reliably scroll for a
+  // same-page hash target, so scroll it ourselves (native fragment nav respects
+  // scroll-padding-top and the section's scroll-margin-top). Cross-route links
+  // fall through to Link, which handles the navigation and the destination hash.
+  const handleNav = useCallback(
+    (e: ReactMouseEvent<HTMLAnchorElement>, href: string) => {
+      closeAll();
+      const hi = href.indexOf("#");
+      if (hi === -1) return;
+      const path = href.slice(0, hi) || "/";
+      const hash = href.slice(hi + 1);
+      if (pathname === path && document.getElementById(hash)) {
+        e.preventDefault();
+        if (location.hash === `#${hash}`) document.getElementById(hash)?.scrollIntoView();
+        else location.hash = hash;
+      }
+    },
+    [closeAll, pathname],
+  );
+
   const moveFocus = useCallback((menu: HTMLElement | null, dir: 1 | -1) => {
     if (!menu) return;
     const items = Array.from(menu.querySelectorAll<HTMLAnchorElement>("[role='menuitem']"));
@@ -211,7 +231,7 @@ export function NavMenu() {
                 {cat.items.map((it) => {
                   const Icon = it.icon;
                   return (
-                    <Link key={it.href} href={it.href} role="menuitem" className="submenu-item" onClick={closeAll}>
+                    <Link key={it.href} href={it.href} role="menuitem" className="submenu-item" onClick={(e) => handleNav(e, it.href)}>
                       <span className="submenu-icon" aria-hidden="true">
                         <Icon size={16} />
                       </span>
