@@ -14,8 +14,8 @@
   --font: system-ui, -apple-system, "Segoe UI", sans-serif;
   --maxw: 1200px;
   --header-h: 64px;
-  --section-pad: 72px;
-  --section-pad-sm: 48px;
+  --section-pad: 44px;
+  --section-pad-sm: 30px;
   --dur: 180ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -351,8 +351,8 @@ button { font-family: inherit; }
 .val-neutral { color: var(--text-primary); }
 
 /* hero -------------------------------------------------------------------- */
-.hero { padding: 72px 0 56px; }
-.hero-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 48px; align-items: start; }
+.hero { padding: 44px 0 36px; }
+.hero-grid { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 28px; align-items: start; }
 .hero h1 {
   font-size: clamp(34px, 5vw, 54px); line-height: 1.04; letter-spacing: -0.025em;
   font-weight: 720; margin: 18px 0;
@@ -492,7 +492,7 @@ button { font-family: inherit; }
 
 /* radar + chart ----------------------------------------------------------- */
 .radar-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: start; }
-.chart-wrap { width: 100%; height: 300px; }
+.chart-wrap { width: 100%; height: 220px; }
 .legend-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
 .legend-item { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-secondary); }
 .legend-swatch { width: 11px; height: 11px; border-radius: 3px; }
@@ -551,7 +551,7 @@ button { font-family: inherit; }
 .issuer-chip .swatch { width: 9px; height: 9px; border-radius: 999px; }
 
 /* content pages (venues / developers / reports) -------------------------- */
-.page-hero { padding: 64px 0 8px; }
+.page-hero { padding: 40px 0 8px; }
 .page-hero h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-spacing: -0.025em; font-weight: 720; margin: 14px 0 14px; max-width: 20ch; }
 .page-hero .lede { color: var(--text-secondary); font-size: 17px; max-width: 60ch; }
 .page-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
@@ -625,7 +625,7 @@ button { font-family: inherit; }
 .loading-dim { opacity: 0.55; transition: opacity 0.2s ease; }
 
 /* footer ------------------------------------------------------------------ */
-.site-footer { border-top: 1px solid var(--border); padding: 44px 0 60px; margin-top: 40px; color: var(--text-muted); font-size: 13px; }
+.site-footer { border-top: 1px solid var(--border); padding: 30px 0 36px; margin-top: 24px; color: var(--text-muted); font-size: 13px; }
 .footer-top { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 28px; }
 .footer-brand { max-width: 42ch; }
 .footer-brand p { margin-top: 10px; line-height: 1.6; }
