@@ -1,0 +1,26 @@
+# NOTICE
+
+OpenTape is licensed under Source-Available No-Derivatives 1.0 (SPDX `LicenseRef-zkasuran-SAND-1.0`).
+
+Third-party components, used under their own licences. Each remains under its own terms; see the
+respective package for the full text.
+
+- viem — MIT
+- zod — MIT
+- @pythnetwork/pyth-evm-js — Apache-2.0
+- fastify — MIT
+- @fastify/cors — MIT
+- dotenv — BSD-2-Clause
+- next — MIT
+- react, react-dom — MIT
+- tailwindcss — MIT
+- postcss — MIT
+- autoprefixer — MIT
+- recharts — MIT
+- clsx — MIT
+- tailwind-merge — MIT
+- lucide-react — ISC
+- typescript — Apache-2.0 (dev)
+- vitest — MIT (dev)
+- tsx — MIT (dev)
+- @biomejs/biome — MIT or Apache-2.0 (dev)
