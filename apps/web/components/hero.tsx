@@ -5,26 +5,12 @@ export function Hero() {
   return (
     <section className="hero" id="top">
       <div className="container hero-grid">
-        <div>
+        <div className="hero-lead">
           <span className="eyebrow">Consolidated tape · Best execution · BNB Chain</span>
           <h1>
             Trade any tokenized stock at the <span className="grad">true best price</span> across every
             issuer, one click on BNB.
           </h1>
-          <p className="hero-lede">
-            The same stock trades as xStocks, bStocks and Ondo, spread across PancakeSwap pools, the
-            Binance book and issuer mint. OpenTape scans every venue, prices each one against the true
-            underlying and routes your order to the cheapest venue you can actually reach.
-          </p>
-          <div className="hero-cta">
-            <a className="btn btn-primary btn-lg" href="#console" style={{ width: "auto" }}>
-              Find best execution
-              <ArrowRight size={16} />
-            </a>
-            <a className="btn btn-ghost btn-lg" href="#radar" style={{ width: "auto" }}>
-              See the premium radar
-            </a>
-          </div>
           <div className="hero-points">
             <div className="hero-point">
               <Layers size={18} />
@@ -51,6 +37,22 @@ export function Hero() {
         </div>
         <div className="hero-visual">
           <HeroPreview />
+          <div className="hero-aside">
+            <p className="hero-lede">
+              The same stock trades as xStocks, bStocks and Ondo, spread across PancakeSwap pools, the
+              Binance book and issuer mint. OpenTape scans every venue, prices each one against the true
+              underlying and routes your order to the cheapest venue you can actually reach.
+            </p>
+            <div className="hero-cta">
+              <a className="btn btn-primary btn-lg" href="#console" style={{ width: "auto" }}>
+                Find best execution
+                <ArrowRight size={16} />
+              </a>
+              <a className="btn btn-ghost btn-lg" href="#radar" style={{ width: "auto" }}>
+                See the premium radar
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

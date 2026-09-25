@@ -100,6 +100,11 @@ export function TradePanel({
           </p>
         ) : null}
       </div>
+
+      <p className="panel-foot">
+        Every route is priced all-in: quote, fee, gas and slippage folded into one landed cost. Gated
+        venues are flagged, permissionless ones execute in one click.
+      </p>
     </div>
   );
 }
