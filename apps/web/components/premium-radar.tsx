@@ -1,21 +1,10 @@
 // SPDX-License-Identifier: LicenseRef-zkasuran-SAND-1.0
 "use client";
 
-import { useEffect, useState, type ComponentProps } from "react";
-import {
-  Bar,
-  BarChart,
-  Cell,
-  CartesianGrid,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { BestExecution } from "../lib/types";
 import { bps, price } from "../lib/format";
-import { CHART_TOKENS, DIVERGE, divergeFill } from "../lib/palette";
+import { DIVERGE, issuerColor } from "../lib/palette";
 import { quotePremiumBps } from "../lib/quote";
 import { issuerLabel, venueLabel } from "../lib/venue";
 import { useTheme } from "./theme";
@@ -23,16 +12,21 @@ import { useTheme } from "./theme";
 interface RadarDatum {
   name: string;
   issuer: string;
+  issuerKey: string;
   premiumBps: number;
   priceUsd: number;
-  kind: string;
 }
+
+// The plot leaves fixed room for the venue label on the left and the bps value on
+// the right; the overlays (zones, the true line, the arb band) inset by the same
+// amounts so a marker at x% lines up exactly with them.
+const LABEL_W = 104;
+const VAL_W = 66;
 
 export function PremiumRadar({ result }: { result: BestExecution }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const { theme } = useTheme();
-  const tok = CHART_TOKENS[theme];
   const poles = DIVERGE[theme];
 
   const fair = result.fairValue.usd;
@@ -40,94 +34,104 @@ export function PremiumRadar({ result }: { result: BestExecution }) {
     .map((q) => ({
       name: venueLabel(q),
       issuer: issuerLabel(q),
+      issuerKey: q.issuer,
       premiumBps: Math.round(quotePremiumBps(q, fair)),
       priceUsd: q.pxPerExposureUsd,
-      kind: q.venueKind,
     }))
     .sort((a, b) => a.premiumBps - b.premiumBps);
 
   const maxAbs = Math.max(20, ...data.map((d) => Math.abs(d.premiumBps)));
   const bound = Math.ceil(maxAbs / 10) * 10;
+  const pct = (p: number) => Math.max(0, Math.min(100, 50 + (p / bound) * 50));
+
+  const cheapest = data[0];
+  const richest = data[data.length - 1];
+  const spread = data.length ? richest.premiumBps - cheapest.premiumBps : 0;
+  const bandLeft = data.length ? pct(cheapest.premiumBps) : 50;
+  const bandRight = data.length ? pct(richest.premiumBps) : 50;
+
+  if (!mounted) return <div className="skeleton" style={{ width: "100%", height: 248 }} />;
 
   return (
-    <div>
-      <div className="chart-wrap">
-        {mounted ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              layout="vertical"
-              margin={{ top: 4, right: 20, bottom: 4, left: 8 }}
-              barCategoryGap={10}
-            >
-              <CartesianGrid horizontal={false} stroke={tok.grid} strokeDasharray="0" />
-              <XAxis
-                type="number"
-                domain={[-bound, bound]}
-                tick={{ fill: tok.textMuted, fontSize: 11 }}
-                tickLine={false}
-                axisLine={{ stroke: tok.axis }}
-                tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}`}
-              />
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={116}
-                tick={{ fill: tok.textSecondary, fontSize: 12 }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <ReferenceLine x={0} stroke={tok.axis} strokeWidth={1.5} />
-              <Tooltip
-                cursor={{ fill: "rgba(128,128,128,0.10)" }}
-                content={renderTooltip as unknown as ComponentProps<typeof Tooltip>["content"]}
-              />
-              <Bar dataKey="premiumBps" radius={[3, 3, 3, 3]} isAnimationActive={false}>
-                {data.map((d) => (
-                  <Cell key={d.name} fill={divergeFill(d.premiumBps, theme)} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="skeleton" style={{ width: "100%", height: "100%" }} />
-        )}
+    <div className="spectrum">
+      <div className="spec-headline">
+        <div className="spec-signal">
+          <span className="spec-eyebrow">Arb signal</span>
+          <span className="spec-spread">{bps(spread)}</span>
+          <span className="spec-cap">spread across venues</span>
+        </div>
+        <div className="spec-flow">
+          <span className="spec-flow-end num-disc">
+            {cheapest?.name ?? "—"} <em>cheapest</em>
+          </span>
+          <span className="spec-flow-arrow" aria-hidden="true">
+            &rarr;
+          </span>
+          <span className="spec-flow-end num-prem">
+            {richest?.name ?? "—"} <em>richest</em>
+          </span>
+        </div>
       </div>
+
+      <div className="spec-plot" style={{ "--label-w": `${LABEL_W}px`, "--val-w": `${VAL_W}px` } as CSSProperties}>
+        <div className="spec-field">
+          <div className="spec-zone spec-zone-disc" style={{ background: `linear-gradient(90deg, ${poles.neg}22, transparent)` }} />
+          <div className="spec-zone spec-zone-prem" style={{ background: `linear-gradient(270deg, ${poles.pos}22, transparent)` }} />
+          {spread > 0 ? (
+            <div className="spec-band" style={{ left: `${bandLeft}%`, width: `${bandRight - bandLeft}%` }}>
+              <span className="spec-band-tag">{bps(spread)} gap</span>
+            </div>
+          ) : null}
+          <div className="spec-true">
+            <span className="spec-true-tag">TRUE ${price(fair)}</span>
+          </div>
+        </div>
+
+        {data.map((d) => {
+          const x = pct(d.premiumBps);
+          const hue = issuerColor(d.issuerKey, theme);
+          const rich = d.premiumBps >= 0;
+          return (
+            <div className="spec-row" key={d.name}>
+              <div className="spec-name">
+                <span className="spec-swatch" style={{ background: hue }} />
+                <span className="spec-venue">{d.name}</span>
+              </div>
+              <div className="spec-track">
+                <span
+                  className={`spec-stem ${rich ? "is-prem" : "is-disc"}`}
+                  style={rich ? { left: "50%", width: `${x - 50}%` } : { left: `${x}%`, width: `${50 - x}%` }}
+                />
+                <span
+                  className="spec-dot"
+                  style={{ left: `${x}%`, background: hue }}
+                  title={`${d.name} · ${d.issuer} · $${price(d.priceUsd)} · ${bps(d.premiumBps, { sign: true })} vs true`}
+                />
+              </div>
+              <div className={`spec-val ${rich ? "num-prem" : "num-disc"}`}>{bps(d.premiumBps, { sign: true })}</div>
+            </div>
+          );
+        })}
+
+        <div className="spec-axis">
+          <span>-{bound}</span>
+          <span className="spec-axis-mid">0 bps</span>
+          <span>+{bound}</span>
+        </div>
+      </div>
+
       <div className="legend-row">
         <span className="legend-item">
           <span className="legend-swatch" style={{ background: poles.neg }} />
-          discount, trades below true
+          left of TRUE trades cheap
         </span>
         <span className="legend-item">
           <span className="legend-swatch" style={{ background: poles.pos }} />
-          premium, trades above true
+          right trades rich
         </span>
         <span className="legend-item" style={{ color: "var(--text-muted)" }}>
-          premium vs true underlying (bps)
+          bps vs the Chainlink underlying
         </span>
-      </div>
-    </div>
-  );
-}
-
-function renderTooltip(props: { active?: boolean; payload?: ReadonlyArray<{ payload?: RadarDatum }> }) {
-  if (!props.active || !props.payload?.length) return null;
-  const d = props.payload[0]?.payload;
-  if (!d) return null;
-  return (
-    <div className="viz-tooltip">
-      <div className="tt-title">{d.name}</div>
-      <div className="tt-row">
-        <span>Issuer</span>
-        <b>{d.issuer}</b>
-      </div>
-      <div className="tt-row">
-        <span>Price</span>
-        <b>${price(d.priceUsd)}</b>
-      </div>
-      <div className="tt-row">
-        <span>vs true</span>
-        <b className={d.premiumBps >= 0 ? "num-prem" : "num-disc"}>{bps(d.premiumBps, { sign: true })}</b>
       </div>
     </div>
   );
